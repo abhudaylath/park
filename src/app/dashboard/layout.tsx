@@ -7,7 +7,7 @@ function DashboardLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className='ml-64 '>
+        <div className='lg:ml-64 '>
             <SidebarLayout>{ children }</SidebarLayout>
         </div>
     )

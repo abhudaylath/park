@@ -21,7 +21,7 @@ function SidebarLayout({
             <div className="flex">
                 <MobileSidebar open={open} setOpen={setOpen} />
                 <DesktopSidebar />
-                <main className='flex-1 bg-gray-200 p-4'>
+                <main className='flex-1 bg-gray-200 p-4 min-h-screen h-auto'>
                     {children}
                 </main>
             </div>
