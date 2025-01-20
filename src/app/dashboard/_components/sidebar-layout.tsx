@@ -18,7 +18,7 @@ function SidebarLayout({
                 <h1 className='text-2xl pl-4'>Dashboard</h1>
             </div>
 
-            <div className="flex h-screen">
+            <div className="flex">
                 <MobileSidebar open={open} setOpen={setOpen} />
                 <DesktopSidebar />
                 <main className='flex-1 bg-gray-200 p-4'>

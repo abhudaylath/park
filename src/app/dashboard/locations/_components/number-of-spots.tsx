@@ -35,7 +35,7 @@ function NumberOfSpots({
         mySpotStore.updateState({
             numberofspots: data.numberofspots
         })
-        console.log("on next...")
+        //console.log("on next...")
         onNext()
     }
 

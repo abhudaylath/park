@@ -20,22 +20,23 @@ function SpotAddress({ onNext }: ListSpotPropsType) {
 
     const handleAddressSelect = (address: string, gpscoords: LatLng) => {
         setMessage('')
+        //console.log(mySpotStore);
         mySpotStore.updateState({
             address: address,
             gpscoords: gpscoords
         })
     }
-  return (
-    <div className="grid w-full gap-1.5">
-        <h2 className="text-xl sm:text-2xl py-4 font-semibold">Address</h2>
-        <AddressAutoCompleteInput onAddressSelect={handleAddressSelect} selectedAddress={mySpotStore.data.address} />
-        <p className='text-red-500 text-sm'>{message}</p>
-        <div className="flex justify-between py-4">
-            <Button type='button' onClick={onSubmit} variant='ghost'>Next</Button>
+    return (
+        <div className="grid w-full gap-1.5">
+            <h2 className="text-xl sm:text-2xl py-4 font-semibold">Address</h2>
+            <AddressAutoCompleteInput onAddressSelect={handleAddressSelect} selectedAddress={mySpotStore.data.address} />
+            <p className='text-red-500 text-sm'>{message}</p>
+            <div className="flex justify-between py-4">
+                <Button type='button' onClick={onSubmit} variant='ghost'>Next</Button>
+            </div>
+
         </div>
-        
-    </div>
-  )
+    )
 }
 
 export default SpotAddress

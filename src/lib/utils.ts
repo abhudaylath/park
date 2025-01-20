@@ -21,3 +21,17 @@ export function formatAmountForDisplay(
   const formatedAmount = numberFormat.format(amount)
   return formatedAmount === 'NaN' ? '' : formatedAmount
 }
+
+export function getStreetFromAddress(address: string) {
+  return address.split(',')[0]
+}
+
+export function getRestAddress(a:string){
+  const index = a.indexOf(", ");
+  let b = ""
+// If the pattern exists, update the string
+if (index !== -1) {
+    b = a.substring(index + 2); // Take everything after ", "
+}
+return b;
+}

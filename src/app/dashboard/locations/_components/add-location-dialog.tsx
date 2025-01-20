@@ -7,13 +7,14 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { useMySpotStore } from '@/store'
-//import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import SpotAddress from './spot-address'
 import NumberOfSpots from './number-of-spots'
 import Pricing from './pricing'
 import Summary from './summary'
+import { toast } from 'sonner'
 
 const totalSteps = 4
 const stepIncrement = 100/totalSteps
@@ -28,14 +29,14 @@ function AddLocationDialog({id=null,open,setOpen}:Props) {
     const [step, setStep] = useState(1)
     //const [submitting, setSubmitting] = useState(false)
     const mySpotStore = useMySpotStore()
-    //const router = useRouter()
+    const router = useRouter()
 
     useEffect(() => {
         setStep(1)
 
         // fetch data
         const fetchData = () => {
-            console.log('fetch data')
+            //console.log('fetch data')
         }
 
         if (id && open) {
@@ -51,9 +52,32 @@ function AddLocationDialog({id=null,open,setOpen}:Props) {
     }
 
     const handleFinalSubmit = async () => {
-        console.log(mySpotStore.data)        
-    }
+        const data = new FormData()
+        const modifiedData = {
+            ...mySpotStore.data, // Spread existing properties
+            bookedspots: 0,     // Add `bookedspots` with value `0`
+        };
+        
+        //console.log(modifiedData)
+        data.set('data', JSON.stringify(
+            modifiedData
+        ))
 
+        const result = await fetch('/api/parkinglocation/new', {
+            method: 'POST',
+            body: data
+        })
+        
+
+        if (result.ok) {
+            toast.success("Record created")
+            setOpen(false)
+            router.refresh()
+        } else {
+            // show error
+            toast.error("failed to create the parking location")
+        }
+    }
     const handleNextStepChange = () => {
         if (step === totalSteps ) return
         

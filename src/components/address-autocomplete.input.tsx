@@ -14,8 +14,6 @@ function AddressAutoCompleteInput({
     onAddressSelect, selectedAddress
 }: AddressAutoCompleteInputProps) {
 
-    //const [autoComplete, setAutoComplete] = useState<google.maps.places.Autocomplete | null>(null)
-
     const { isLoaded } = useJsApiLoader({
         nonce: "477d4456-f7b5-45e2-8945-5f17b3964759",
         googleMapsApiKey: process.env.NEXT_PUBLIC_MAPS_API_KEY!,
@@ -26,36 +24,36 @@ function AddressAutoCompleteInput({
 
     useEffect(() => {
         if (isLoaded) {
-            const ontarioBounds = new google.maps.LatLngBounds(
-                new google.maps.LatLng({ lat: 19.1618793, lng: 72.8307817 }), // south west
-                new google.maps.LatLng({ lat: 19.1882950, lng: 72.8748761 }) // north east
+            const bounds = new google.maps.LatLngBounds(
+                new google.maps.LatLng({ lat: 19.161733046075117, lng: 72.82921419960786 }), // SW
+                new google.maps.LatLng({ lat: 19.189112725700344, lng: 72.87677903749488 })  // NE
             )
-
-            const gAutoComplete = new google.maps.places.Autocomplete(placesAutoCompleteRef.current as HTMLInputElement, {
-                bounds: ontarioBounds,
-                fields: ['formatted_address', 'geometry'],
+            /*important part */
+            const autoComplete = new google.maps.places.Autocomplete(placesAutoCompleteRef.current as HTMLInputElement, {
+                bounds: bounds,
+                fields: ['formatted_address', 'geometry','name','adr_address'],
                 componentRestrictions: { country: ['in'] }
             })
 
-            gAutoComplete.addListener('place_changed', () => {
-                const place = gAutoComplete.getPlace()
+            autoComplete.addListener('place_changed', () => {
+                const place = autoComplete.getPlace()
+                //console.log(place.adr_address);
+                const updated_place = place.name+", "+place.formatted_address;
                 if (place.formatted_address && place.geometry?.location) {
-                    onAddressSelect(place.formatted_address, {
+                    onAddressSelect(updated_place, {
                         lat: place.geometry.location.lat(),
                         lng: place.geometry.location.lng()
                     })
+                } else {
+                    console.warn('Place details not available', place)
                 }
             })
-
-            //setAutoComplete(gAutoComplete)
         }
     }, [isLoaded, onAddressSelect])
 
     useEffect(() => {
-        // https://github.com/radix-ui/primitives/issues/1859
-        // Disable Radix ui dialog pointer events lockout
         setTimeout(() => (document.body.style.pointerEvents = ""), 0)
-    })
+    }, [])
 
     return (
         <Input ref={placesAutoCompleteRef} defaultValue={selectedAddress} />

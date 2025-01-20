@@ -12,8 +12,7 @@ function Sidebar() {
 
 
     return (
-        <div className="flex flex-col z-10 w-[256px] bg-gray-800 text-white 
-        h-full overflow-auto p-4">
+        <div className="flex flex-col z-10 w-[256px] bg-gray-800 text-white fixed top-0 left-0 h-screen overflow-auto p-4">
             <h1 className='text-2xl pl-4'>
                 <Link href="/dashboard">Dashboard</Link>
             </h1>
