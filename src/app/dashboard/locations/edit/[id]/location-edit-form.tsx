@@ -46,7 +46,7 @@ function LocationEditForm({ location,id }: { location: string ,id:string}) {
 
     const onSubmit = async (data: FormInput) => {
         setProgress(true)
-        console.log(data);
+        //console.log(data);
         try{
             const response = await fetch(`/api/edit-location/${id}`, {
                 method: 'PUT',

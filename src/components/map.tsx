@@ -28,7 +28,7 @@ function Map({ mapParams }: { mapParams: string}) {
                     lat: params[0].gpscoords.lat,
                     lng: params[0].gpscoords.lng
                 },
-                zoom: 14,
+                zoom: 16,
                 mapId: 'MY-MAP-ID-1234'
             }
 

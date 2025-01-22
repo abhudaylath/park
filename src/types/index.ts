@@ -14,7 +14,7 @@ export type Price = {
 
 export enum ParkingLocationStatus {
     AVAILABLE = 'AVAILABLE',
-    //FULL = 'FULL',
+    FULL = 'FULL',
     NOTAVAILABLE = 'NOTAVAILABLE',
 }
 

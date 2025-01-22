@@ -20,7 +20,7 @@ const ParkingLocationSchema = new Schema<ParkingLocation>({
     address: String,
     location: {
         type: { type: String, default: "Point"},
-        coordinates: [Number]
+        coordinates: {type: [Number], index: "2dsphere" },
     },
     gpscoords: {
         lat: Number,

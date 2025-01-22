@@ -19,6 +19,11 @@ function Sidebar() {
             <div className="flex flex-col justify-between h-full">
                 <ul className='w-full pt-8 space-y-2 flex flex-col'>
                     <li>
+                        <ActiveLink href='/'>
+                            Home
+                        </ActiveLink>
+                    </li>
+                    <li>
                         <ActiveLink href='/dashboard/locations/tileview'>
                             Locations
                         </ActiveLink>
