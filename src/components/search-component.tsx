@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react'
 import SearchForm from './search-form'
-import { LatLng, MapAddressType, MapParams } from '@/types'
-import { ParkingLocation } from '@/schemas/parking-locations'
+import { LatLng, MapAddressType, MapParams, ParkingLocationResponse } from '@/types'
 import Map from './map'
 import SearchResult from './search-result'
 //import Map from './map'
@@ -49,18 +48,18 @@ function SearchComponent() {
 
       // Parse the JSON response
       const data = await response.json();
-
+      
       const searchResult = data.locations;
 
-      const mapParams: MapParams[] = searchResult.map((loc: ParkingLocation) => ({
-        address: loc.address,
-        gpscoords: loc.gpscoords,
-        price: loc.price,
-        numberofspots: loc.numberofspots,
-        bookedspots: loc.bookedspots,
-        status: loc.status,
-        type: MapAddressType.PARKINGLOCATION,
-        id: loc._id
+      const mapParams: MapParams[] = searchResult.map((loc: ParkingLocationResponse) => ({
+        address: loc._doc.address, // Access address inside _doc
+        gpscoords: loc._doc.gpscoords, // Access gpscoords inside _doc
+        price: loc._doc.price, // Access price inside _doc
+        numberofspots: loc._doc.numberofspots, // Access number of spots
+        bookedspots: loc.bookedspots, // Directly accessed from top level
+        status: loc._doc.status, // Access status inside _doc
+        type: MapAddressType.PARKINGLOCATION, // Fixed type
+        id: loc._doc._id, // Access _id inside _doc
       }))
 
       if (mapParams.length > 0) {
@@ -109,5 +108,4 @@ function SearchComponent() {
     </div>
   )
 }
-
 export default SearchComponent

@@ -56,3 +56,23 @@ export type ActionResponse = {
     data?: Date,
     error?: string
 }
+
+
+export type ParkingLocationDoc = {
+    address: string;
+    gpscoords: { lat: number; lng: number };
+    price: { hourly: number };
+    numberofspots: number;
+    status: string;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
+
+export type ParkingLocationResponse = {
+    $__: object; // MongoDB's internal metadata
+    $isNew: boolean;
+    bookedspots: number;
+    _doc: ParkingLocationDoc;
+};

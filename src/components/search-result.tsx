@@ -12,7 +12,6 @@ function SearchResult({
     locations: MapParams[],
     params: SearchParams
 }) {
-    console.log(locations)
     return (
         <>
             {

@@ -74,8 +74,7 @@ export default function Home() {
             </div>
 
             <div className="pt-8 sm:pt-0">
-              <Image alt="mobile screenshot" width={300} height={400}
-              src="/gateless-parking-mobile.png" />
+              <Image alt="mobile screenshot" width={220} height={300} style={{ width: "100%", height: "auto" }} src="/gateless-parking-mobile.png" />
             </div>
           </div>
 
