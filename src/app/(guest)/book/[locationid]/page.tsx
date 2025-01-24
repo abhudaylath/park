@@ -1,4 +1,5 @@
 "use client"
+import { createRazorpayOrder } from '@/actions/razorpay'
 import Footer from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form'
@@ -93,9 +94,9 @@ function BookPage() {
         }
     })
     async function onSubmit(formData: z.infer<typeof FormSchema>) {
-        console.log(formData);
+        //console.log(formData);
         const fd = new FormData()
-        console.log(location);
+        //console.log(location);
         if (!location) {
             console.error("Location is null");
             throw new Error("Location details are required to proceed");
@@ -111,8 +112,14 @@ function BookPage() {
         fd.append('starttime', startTime!)
         fd.append('endtime', endTime!)
         fd.append('plate', formData.plateno)
-        console.log(fd);
-        
+        await createRazorpayOrder(fd);
+        //console.log(fd);
+        const bookingdate = fd.get('bookingdate')
+    const starttime = fd.get('starttime')
+    const endtime = fd.get('endtime')
+    console.log(bookingdate);
+    console.log(starttime);
+    console.log(endtime);
     }
 
 

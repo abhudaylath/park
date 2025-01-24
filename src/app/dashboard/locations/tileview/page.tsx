@@ -22,8 +22,6 @@ async function LocationsTileViewPage() {
               name={getStreetFromAddress(location.address)}
             address={getRestAddress(location.address)}
             numberOfSpots={location.numberofspots}
-            spotsAvailable={location.bookedspots}
-            spotsBooked={location.numberofspots-location.bookedspots}
             status={location.status}
             price={location.price}
           />

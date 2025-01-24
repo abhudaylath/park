@@ -49,16 +49,24 @@ export async function GET(request: Request) {
                 },
             },
         });
+        
         const availableLocations = await Promise.all(
             locations.map(async (location: ParkingLocation) => {
                 try {
                     const bookings = await BookingModel.find({
                         locationid: location._id,
                         status: BookingStatus.BOOKED,
-                        starttime: { $lt: et },
-                        endtime: { $gt: st },
+                        $or: [
+                            { starttime: { $lt: et, $gte: st } },
+                            { endtime: { $lte: et, $gt: st } },
+                            { starttime: { $lte: st }, endtime: { $gte: et } },
+                            { starttime: { $gte: st }, endtime: { $lte: et } },
+                        ]
                     }).lean();
-
+                    console.log(st);
+                    console.log(et);
+                    
+                    
                     if (bookings.length < location.numberofspots) {
                         return { ...location, bookedspots: bookings.length };
                     } else {
@@ -70,6 +78,7 @@ export async function GET(request: Request) {
                 }
             })
         );
+        
         // Return the found locations
         return NextResponse.json({ success: true,locations: availableLocations }, { status: 200 });
     } catch (error) {

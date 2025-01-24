@@ -10,8 +10,6 @@ type Props = {
     name: string,
     address: string,
     numberOfSpots: number,
-    spotsBooked: number,
-    spotsAvailable: number,
     status: string,
     price: {
         hourly: number
@@ -19,7 +17,7 @@ type Props = {
 }
 
 const LocationCard: React.FC<Props> = ({
-    id, name, address, numberOfSpots, spotsBooked, spotsAvailable, status, price
+    id, name, address, numberOfSpots, status, price
 }) => {
 //console.log(name);
 
@@ -32,13 +30,11 @@ const LocationCard: React.FC<Props> = ({
                 <CardDescription className="text-md">{address}</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="mb-4 grid grid-cols-1 items-start pb-4">
+                <div className="mb-4 grid grid-cols-1 items-start ">
                     <div className="space-y-2">
                         <p className="text-sm font-medium leading-none">Hourly price: {formatAmountForDisplay(price.hourly, 'INR')}</p>
                         <p className="text-sm font-medium leading-none">Number of spots: {numberOfSpots}</p>
                         <hr />
-                        <p className="text-sm font-medium leading-none">Spots booked: {spotsBooked}</p>
-                        <p className="text-sm font-medium leading-none">Spots Available: {spotsAvailable}</p>
                     </div>
                 </div>
             </CardContent>
