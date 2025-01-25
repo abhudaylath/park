@@ -114,12 +114,12 @@ function BookPage() {
         fd.append('plate', formData.plateno)
         await createRazorpayOrder(fd);
         //console.log(fd);
-        const bookingdate = fd.get('bookingdate')
+        /*const bookingdate = fd.get('bookingdate')
     const starttime = fd.get('starttime')
     const endtime = fd.get('endtime')
     console.log(bookingdate);
     console.log(starttime);
-    console.log(endtime);
+    console.log(endtime);*/
     }
 
 

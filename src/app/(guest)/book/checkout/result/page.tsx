@@ -9,6 +9,8 @@ import { CheckCircle2 } from "lucide-react";
 //import { currentUser } from "@clerk/nextjs/server";
 import Razorpay from "razorpay";
 import Footer from "@/components/footer";
+import { sendConfirmationEmail } from "@/actions/actions";
+import { currentUser } from "@clerk/nextjs/server";
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID!,
@@ -19,15 +21,15 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
     const { order_id } = await searchParams;
 
     // Get the user
-    //const user = await currentUser();
+    const user = await currentUser();
 
     if (!order_id) {
         throw new Error("Invalid order ID");
     }
 
-    /*if (!user) {
+    if (!user) {
         throw new Error("You must be logged in");
-    }*/
+    }
 
     // Retrieve Razorpay order details
     const orderDetails = await razorpay.orders.fetch(order_id);
@@ -45,8 +47,8 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
     let plate = "";
 
     if (orderDetails.status === "paid") {
-        const bookingid = orderDetails.notes?.bookingid;
-
+        const bookingid = String(orderDetails.notes?.bookingid||"");
+        
         await connectToDB();
 
         const booking = await BookingModel.findById<Booking>(bookingid).populate({
@@ -67,7 +69,7 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
 
                 await booking.save();
 
-                //await sendConfirmationEmail(bookingid);
+                await sendConfirmationEmail(bookingid);
             }
         }
     }

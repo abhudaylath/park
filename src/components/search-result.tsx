@@ -14,10 +14,10 @@ function SearchResult({
 }) {
     return (
         <>
-            {
+            { 
                 locations.filter(loc => loc.type === MapAddressType.PARKINGLOCATION).map((loc, index) => (
-
-                    <Card key={loc.address}>
+                    
+                    <Card key={loc.address} className={`${(loc.numberofspots! - loc.bookedspots! ===0)?'':'block'}`}>
                         <CardHeader>
                             <CardTitle className='text-white w-6 h-6 rounded-full bg-black text-center'>
                                 {index + 1}

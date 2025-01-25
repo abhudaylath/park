@@ -54,7 +54,7 @@ export type ActionResponse = {
     code: number,
     message: string,
     data?: Date,
-    error?: string
+    error?: string|null|undefined
 }
 
 
