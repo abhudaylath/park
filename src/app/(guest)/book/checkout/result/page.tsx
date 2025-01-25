@@ -9,7 +9,7 @@ import { CheckCircle2 } from "lucide-react";
 //import { currentUser } from "@clerk/nextjs/server";
 import Razorpay from "razorpay";
 import Footer from "@/components/footer";
-import { sendConfirmationEmail } from "@/actions/actions";
+import { sendConfirmationEmail } from "@/actions/send-confirmation-email";
 import { currentUser } from "@clerk/nextjs/server";
 
 const razorpay = new Razorpay({

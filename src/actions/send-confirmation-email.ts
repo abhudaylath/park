@@ -1,10 +1,11 @@
 import { connectToDB } from "@/lib/db";
 import { Booking, BookingModel } from "@/schemas/booking";
-import { ParkingLocationModel } from "@/schemas/parking-locations";
+import { ParkingLocation, ParkingLocationModel } from "@/schemas/parking-locations";
 import { ActionResponse } from "@/types";
 import { currentUser } from "@clerk/nextjs/server";
 import { formatDate } from "date-fns";
 import sendEmail from "@/lib/nodemailer";
+import { EmailTemplate } from "@/components/email-template";
 
 export async function sendConfirmationEmail(bookingid: string): Promise<ActionResponse> {
     try {
@@ -31,21 +32,15 @@ export async function sendConfirmationEmail(bookingid: string): Promise<ActionRe
             const formattedEndTime = booking.endtime
                 ? formatDate(booking.endtime, "hh:mm a")
                 : "Unknown";
-
-            const emailHtml = `
-                <html>
-                  <body>
-                    <h1>Hello ${user.firstName}</h1>
-                    <p>Your booking has been confirmed!</p>
-                    <p><strong>Booking Date:</strong> ${formattedBookingDate}</p>
-                    <p><strong>Arriving On:</strong> ${formattedStartTime}</p>
-                    <p><strong>Leaving On:</strong> ${formattedEndTime}</p>
-                    <p><strong>Plate No:</strong> ${booking.plate}</p>
-                    <p><strong>Address:</strong> ${booking.locationid.address}</p>
-                  </body>
-                </html>
-            `;
-            console.log("ehtml",emailHtml);
+            
+            const emailHtml = EmailTemplate({
+                firstName: user.firstName,
+                bookingDate: formattedBookingDate,
+                arrivingOn: formattedStartTime,
+                leavingOn: formattedEndTime,
+                plateNo: booking.plate,
+                address: ((booking?.locationid as object) as ParkingLocation).address,
+            });
             
             /*const mailOptions = {
                 from: '"Gateless Parking" <abhudaylath@gmail.com>',
@@ -55,9 +50,8 @@ export async function sendConfirmationEmail(bookingid: string): Promise<ActionRe
             };
 
             const info = await transporter.sendMail(mailOptions);*/
-            const info = await sendEmail(user.primaryEmailAddress.emailAddress,emailHtml)
-            console.log("Message sent: %s", info);
-
+            await sendEmail(user.primaryEmailAddress.emailAddress,emailHtml)
+            
             return {
                 code: 0,
                 message: "Email sent successfully",

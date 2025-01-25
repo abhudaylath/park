@@ -15,7 +15,6 @@ async function sendEmail(email:string,emailHtml:string) {
         subject: 'Your booking has been confirmed',
         html:emailHtml
     };
-    console.log(mailOptions);
     
     await transporter.sendMail(mailOptions);
 }
