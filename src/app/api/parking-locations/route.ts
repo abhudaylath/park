@@ -62,10 +62,7 @@ export async function GET(request: Request) {
                             { starttime: { $lte: st }, endtime: { $gte: et } },
                             { starttime: { $gte: st }, endtime: { $lte: et } },
                         ]
-                    }).lean();
-                    console.log(st);
-                    console.log(et);
-                    
+                    }).lean();                   
                     
                     if (bookings.length < location.numberofspots) {
                         return { ...location, bookedspots: bookings.length };
