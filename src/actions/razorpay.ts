@@ -3,11 +3,17 @@
 import { connectToDB } from '@/lib/db'
 import { razorpay } from '@/lib/razorpay' // Assume you've configured Razorpay SDK
 import { BookingModel } from '@/schemas/booking'
+import { currentUser } from '@clerk/nextjs/server'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function createRazorpayOrder(data: FormData): Promise<void> {
     const now = new Date()
+    const user = await currentUser()
+
+    if (!user) {
+        throw new Error("You must be logged in")
+    }
 
     await connectToDB()
 
@@ -43,7 +49,7 @@ export async function createRazorpayOrder(data: FormData): Promise<void> {
         amount: Number(data.get('amount')),
         timeoffset: now.getTimezoneOffset(),
         plate: (data.get('plate') as string).replaceAll(' ', ''),
-        userid: '', // user?.id
+        userid:  user?.id
     });
 
 
