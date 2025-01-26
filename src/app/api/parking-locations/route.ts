@@ -39,9 +39,6 @@ export async function GET(request: Request) {
             minute: '2-digit',
             second: '2-digit'
         }).format(new Date(arrivingOn)).split(", ")[0];
-        console.log(arrivingDate);
-        console.log(arrivingTime);
-        console.log(leavingTime);
         
         const st = `${arrivingTime}:00`; // Ensure HH:mm format and add seconds
         const et = `${leavingTime}:00`;
@@ -59,6 +56,7 @@ export async function GET(request: Request) {
                     $centerSphere: [[longitude, latitude], 500 / 6378137], // Radius in radians (500m ÷ Earth's radius in meters)
                 },
             },
+            status: ParkingLocationStatus.AVAILABLE,
         });
 
         const availableLocations = await Promise.all(
