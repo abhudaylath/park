@@ -29,14 +29,25 @@ export async function GET(request: Request) {
         if (isNaN(latitude) || isNaN(longitude)) {
             return NextResponse.json({ error: 'Invalid latitude or longitude.' }, { status: 400 });
         }
+        const arrivingDate = new Intl.DateTimeFormat('en-IN', { 
+            timeZone: 'Asia/Kolkata', 
+            hour12: false, 
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(new Date(arrivingOn)).split(", ")[0];
+        console.log(arrivingDate);
+        console.log(arrivingTime);
+        console.log(leavingTime);
+        
+        const st = `${arrivingTime}:00`; // Ensure HH:mm format and add seconds
+        const et = `${leavingTime}:00`;
 
-        const st = new Date(arrivingOn); // Use arrivingOn directly
-        const et = new Date(`${arrivingOn.split('T')[0]}T${leavingTime}`); // Combine the date part of arrivingOn with leavingTime
 
-
-        if (isNaN(st.getTime()) || isNaN(et.getTime())) {
-            return NextResponse.json({ error: 'Invalid date/time values.' }, { status: 400 });
-        }
+        
 
         // Connect to the database
         await connectToDB();
@@ -49,25 +60,117 @@ export async function GET(request: Request) {
                 },
             },
         });
-        
+
         const availableLocations = await Promise.all(
             locations.map(async (location: ParkingLocation) => {
                 try {
                     const bookings = await BookingModel.find({
                         locationid: location._id,
-                        status: BookingStatus.BOOKED,
-                        $or: [
-                            { starttime: { $lt: et, $gte: st } },
-                            { endtime: { $lte: et, $gt: st } },
-                            { starttime: { $lte: st }, endtime: { $gte: et } },
-                            { starttime: { $gte: st }, endtime: { $lte: et } },
-                        ]
-                    }).lean();                   
+                    }).lean();
+
+                    const bookedSpotIds = new Set();
+                    bookings.forEach(booking => {
+
+
+                        const bookingStartDate = new Date(booking.starttime);
+                        const bookingEndDate = new Date(booking.endtime);
+
+                        const bookingStartDateIST = new Intl.DateTimeFormat('en-IN', { 
+                            timeZone: 'Asia/Kolkata', 
+                            hour12: false, 
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        }).format(bookingStartDate);
                     
-                    if (bookings.length < location.numberofspots) {
-                        return { ...location, bookedspots: bookings.length };
+                        const bookingEndDateIST = new Intl.DateTimeFormat('en-IN', { 
+                            timeZone: 'Asia/Kolkata', 
+                            hour12: false, 
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        }).format(bookingEndDate);
+
+                        const bookingStartDateFormatted = bookingStartDateIST.split(', ')[0];
+                        let  bookingStartTimeFormatted = bookingStartDateIST.split(', ')[1];
+                        const bookingEndDateFormatted = bookingEndDateIST.split(', ')[0];
+                        let  bookingEndTimeFormatted = bookingEndDateIST.split(', ')[1];
+
+                        
+                        /*const requestedStartDateIST = new Intl.DateTimeFormat('en-IN', { 
+                            timeZone: 'Asia/Kolkata', 
+                            hour12: false, 
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        }).format(st);
+                        
+
+                        const requestedEndDateIST  = new Intl.DateTimeFormat('en-IN', { 
+                            timeZone: 'Asia/Kolkata', 
+                            hour12: false, 
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        }).format(et);
+
+
+                        const [requestedStartDateFormatted, requestedStartTimeFormatted] = requestedStartDateIST.split(' ');
+                        const [requestedEndDateFormatted, requestedEndTimeFormatted] = requestedEndDateIST.split(' ');
+*/
+                        
+                        
+                        if(bookingStartTimeFormatted==='24:00:00'){
+                            bookingStartTimeFormatted='00:00:00'
+                        }
+
+                        if(bookingEndTimeFormatted==='24:00:00'){
+                            bookingEndTimeFormatted='00:00:00'
+                        }
+                        
+                        if (
+                            booking.status === BookingStatus.BOOKED &&
+                            bookingStartDateFormatted === arrivingDate &&
+                            bookingEndDateFormatted === arrivingDate
+                        ) {
+                            if (
+                                (bookingStartTimeFormatted <= st && bookingEndTimeFormatted > st) || // Overlaps start
+                                (bookingStartTimeFormatted < et && bookingEndTimeFormatted >= et) || // Overlaps end
+                                (st <= bookingStartTimeFormatted && et >= bookingEndTimeFormatted) || // Encloses booking
+                                (st >= bookingStartTimeFormatted && et <= bookingEndTimeFormatted) // Enclosed by booking
+                            ) {
+                                bookedSpotIds.add(booking); 
+                            }
+                        }
+                        
+
+                    });
+
+                    const usedSpots = bookedSpotIds.size;
+
+                    if (usedSpots < location.numberofspots) {
+                        return {
+                            ...location,
+                            bookedspots: usedSpots,
+                        };
                     } else {
-                        return { ...location, bookedspots: bookings.length, status: ParkingLocationStatus.FULL };
+                        return {
+                            ...location,
+                            bookedspots: usedSpots,
+                            status: ParkingLocationStatus.FULL,
+                        };
                     }
                 } catch (err) {
                     console.log(`Error processing location ${arrivingTime}:`, err);
@@ -75,9 +178,9 @@ export async function GET(request: Request) {
                 }
             })
         );
-        
+
         // Return the found locations
-        return NextResponse.json({ success: true,locations: availableLocations }, { status: 200 });
+        return NextResponse.json({ success: true, locations: availableLocations }, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ success: false, error: 'Internal server error.' }, { status: 500 });

@@ -103,7 +103,7 @@ function SearchComponent() {
             <Map mapParams={JSON.stringify(search)} />
             </div>
           </div>
-          : <p className="text-center pt-12 pb-12 text-xl sm:text-4xl text-slate-300">{message}</p>
+          : <p className="text-center pt-12 pb-12 text-xl sm:text-4xl text-slate-700">{message}</p>
       }
     </div>
   )
