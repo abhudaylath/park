@@ -1,3 +1,4 @@
+import CancelBookingButton from '@/components/cancel-location-button';
 import { connectToDB } from '@/lib/db';
 import { getStreetFromAddress } from '@/lib/utils';
 import { Booking, BookingModel } from '@/schemas/booking';
@@ -50,8 +51,7 @@ async function MyBookingsPage() {
                             </div>
                             {booking.status === BookingStatus.BOOKED && (
                                 <div className="flex sm:flex-col sm:space-y-2 items-end">
-                                    <button className="text-red-500">Cancel</button>
-                                    <button className="text-blue-500">Edit</button>
+                                    <CancelBookingButton param={booking.id}/>
                                 </div>
                             )}
                         </div>
