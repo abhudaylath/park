@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
 
-    const { id } = params;
+    const { id } = await params;
     try {
         const body = await request.json(); // Parse the request body
         const { status } = body;

@@ -51,30 +51,29 @@ async function RevenuePage() {
 
     return (
         <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-2 p-2">
-            {
-                locations.map(location => (
+    {
+        locations.map(location => (
+            <Card key={location._id} className="w-full flex flex-col">
+                <CardHeader>
+                    <CardTitle>
+                        {getStreetFromAddress(location.address)}
+                    </CardTitle>
+                    <CardDescription className="text-md text-green-400">
+                        Booked {location.bookedCount}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col flex-1 justify-between">
+                    <div className="mt-auto">
+                        <p className="text-lg font-medium leading-none">
+                            Revenue: {formatAmountForDisplay(location.totalAmount, 'INR')}
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+        ))
+    }
+</div>
 
-                    <Card key={location.id} className='w-full '>
-                        <CardHeader>
-                            <CardTitle>
-                                {getStreetFromAddress(location.address)}
-                            </CardTitle>
-                            <CardDescription className='text-md text-green-400'>Booked {location.bookedCount}</CardDescription>
-                            <CardDescription className='text-md text-red-400'>Cancelled {location.cancelledCount}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="mb-4 grid grid-cols-1 items-start pb-4 last:mb-0 last:pb-0">
-                                <div className="space-y-2">
-                                    <p className="text-lg font-medium leading none">
-                                        Revenue: {formatAmountForDisplay(location.totalAmount, 'INR')}
-                                    </p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))
-            }
-        </div>
     )
 }
 

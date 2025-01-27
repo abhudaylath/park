@@ -71,8 +71,8 @@ export async function createRazorpayOrder(data: FormData): Promise<void> {
         throw new Error("Failed to create Razorpay order")
     }
     
-    console.log("HI");
-    console.log(razorpayOrder);
+    //console.log("HI");
+    //console.log(razorpayOrder);
     
     
     // Redirect to Razorpay Checkout

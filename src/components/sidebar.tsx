@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import ActiveLink from './active-link'
+import { UserButton } from '@clerk/nextjs'
 
 export interface MenuItem {
     id: string,
@@ -41,7 +42,7 @@ function Sidebar() {
                 </ul>
 
                 <div className="pl-4 text-blue-600">
-                    button
+                    <UserButton/>
                 </div>
             </div>
         </div>

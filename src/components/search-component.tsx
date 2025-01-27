@@ -77,7 +77,6 @@ function SearchComponent() {
         }
         setSearch([...mapParams])
         setSearchParams(params)
-        console.log(searchParams);
         
       } else {
         setMessage("No nearby parking locations found.")
