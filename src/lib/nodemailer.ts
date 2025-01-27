@@ -8,11 +8,11 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function sendEmail(email:string,emailHtml:string) {
+async function sendEmail(email:string|undefined,emailHtml:string,subject:string) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
-        subject: 'Your booking has been confirmed',
+        subject: subject,
         html:emailHtml
     };
     

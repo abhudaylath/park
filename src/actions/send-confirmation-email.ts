@@ -6,6 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { formatDate } from "date-fns";
 import sendEmail from "@/lib/nodemailer";
 import { EmailTemplate } from "@/components/email-template";
+import {ViolationEmailTemplate} from "@/components/violation-email-template";
 
 export async function sendConfirmationEmail(bookingid: string): Promise<ActionResponse> {
     try {
@@ -50,13 +51,60 @@ export async function sendConfirmationEmail(bookingid: string): Promise<ActionRe
             };
 
             const info = await transporter.sendMail(mailOptions);*/
-            await sendEmail(user.primaryEmailAddress.emailAddress,emailHtml)
+            const subject = 'Booking has been confirmed'
+            await sendEmail(user.primaryEmailAddress.emailAddress,emailHtml,subject)
             
             return {
                 code: 0,
                 message: "Email sent successfully",
             };
         }
+
+        return {
+            code: 1,
+            message: "Booking not found",
+        };
+    } catch (error) {
+        console.error("Error sending confirmation email:", error);
+        return {
+            code: 2,
+            message: "Failed to send email",
+        };
+    }
+}
+
+
+
+export async function sendViolationEmail(plate: string, address: string, timestamp: string): Promise<ActionResponse> {
+    try {
+        const user = await currentUser();
+        if (!user || !user.firstName || !user.primaryEmailAddress?.emailAddress) {
+            throw new Error("User is not logged in or missing required information");
+        }
+
+                        
+            const emailHtml = ViolationEmailTemplate({
+                plate: plate,
+                address: address,
+                timestamp: timestamp
+            })
+            
+            /*const mailOptions = {
+                from: '"Gateless Parking" <abhudaylath@gmail.com>',
+                to: user.primaryEmailAddress.emailAddress,
+                subject: "Your booking has been confirmed",
+                html: emailHtml,
+            };
+            
+            const info = await transporter.sendMail(mailOptions);*/
+            const subject = 'Violation Reported'
+            await sendEmail(process.env.VIOLATION_MAIL,emailHtml,subject)
+            
+            return {
+                code: 0,
+                message: "Email sent successfully",
+            };
+        
 
         return {
             code: 1,
