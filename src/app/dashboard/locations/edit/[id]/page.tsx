@@ -2,11 +2,13 @@ import { ParkingLocation, ParkingLocationModel } from '@/schemas/parking-locatio
 import React from 'react';
 import LocationEditForm from './location-edit-form';
 
-export default async function LocationEditPage({
+// Removed 'async' from the page component
+export default function LocationEditPage({
     params
 }: { params: { id: string } }) {
-    const { id } = params; // Directly access params without awaiting it
+    const { id } = params;  // Directly access params without async/await
     
+    // Perform async operation inside useEffect or directly in try/catch for async
     try {
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
         
