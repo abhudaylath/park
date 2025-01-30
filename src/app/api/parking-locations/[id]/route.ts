@@ -1,17 +1,24 @@
 import { connectToDB } from '@/lib/db';
 import { ParkingLocationModel } from '@/schemas/parking-locations';
-//import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+// PUT - Update a parking location
+export async function PUT(request: NextRequest) {
+    const { pathname } = new URL(request.url); // Extract URL path
+    const id = pathname.split("/").pop(); // Extract the last part (ID)
 
-    const { id } = await params;
     try {
+        if (!id) {
+            return NextResponse.json({ error: 'Missing parking location ID' }, { status: 400 });
+        }
+
         const body = await request.json(); // Parse the request body
         const { status } = body;
+
         if (!status) {
             return NextResponse.json({ error: 'Missing status in the request' }, { status: 400 });
         }
+
         const updatedLocation = await ParkingLocationModel.findByIdAndUpdate(
             id,
             { status },
@@ -29,10 +36,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 }
 
+// DELETE - Delete a parking location
+export async function DELETE(request: NextRequest) {
+    const { pathname } = new URL(request.url); // Extract URL path
+    const id = pathname.split("/").pop(); // Extract the last part (ID)
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-    const { id } = params;
     try {
+        if (!id) {
+            return NextResponse.json({ error: 'Missing parking location ID' }, { status: 400 });
+        }
+
         const deletedLocation = await ParkingLocationModel.findByIdAndDelete(id);
 
         if (!deletedLocation) {
@@ -46,9 +59,16 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 }
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+// GET - Get a parking location
+export async function GET(request: NextRequest) {
+    const { pathname } = new URL(request.url); // Extract URL path
+    const id = pathname.split("/").pop(); // Extract the last part (ID)
+
     try {
-        const { id } = await params;
+        if (!id) {
+            return NextResponse.json({ error: 'Missing parking location ID' }, { status: 400 });
+        }
+
         await connectToDB();
         const location = await ParkingLocationModel.findById(id);
 
