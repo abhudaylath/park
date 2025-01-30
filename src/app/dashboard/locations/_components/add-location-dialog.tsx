@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     Dialog,
     DialogContent,
@@ -17,7 +17,7 @@ import Summary from './summary'
 import { toast } from 'sonner'
 
 const totalSteps = 4
-const stepIncrement = 100/totalSteps
+const stepIncrement = 100 / totalSteps
 
 type Props = {
     id?: string | null,
@@ -25,77 +25,76 @@ type Props = {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function AddLocationDialog({id=null,open,setOpen}:Props) {
+function AddLocationDialog({ id = null, open, setOpen }: Props) {
     const [step, setStep] = useState(1)
-    //const [submitting, setSubmitting] = useState(false)
-    const mySpotStore = useMySpotStore()
+    const restart = useMySpotStore((state) => state.restart) // Extract restart method from Zustand
+    const data = useMySpotStore((state) => state.data) // Optional: extract data if used
     const router = useRouter()
+
+    const restartStore = useCallback(() => {
+        restart()
+    }, [restart])
 
     useEffect(() => {
         setStep(1)
 
-        // fetch data
         const fetchData = () => {
-            //console.log('fetch data')
+            // Fetch logic here (e.g., fetch spot details if `id` is provided)
         }
 
         if (id && open) {
             fetchData()
-        } else {
-            mySpotStore.restart()
+        } else if (open) {
+            restartStore()
         }
-    }, [id, open,mySpotStore])
+    }, [id, open, restartStore])
 
     const handleListAnother = () => {
         setStep(1)
-        mySpotStore.restart()
+        restart()
     }
 
     const handleFinalSubmit = async () => {
-        const data = new FormData()
+        const formData = new FormData()
         const modifiedData = {
-            ...mySpotStore.data, // Spread existing properties
-            bookedspots: 0,     // Add `bookedspots` with value `0`
-        };
-        
-        //console.log(modifiedData)
-        data.set('data', JSON.stringify(
-            modifiedData
-        ))
+            ...data, // Spread existing properties
+            bookedspots: 0, // Add `bookedspots` with value `0`
+        }
+
+        formData.set('data', JSON.stringify(modifiedData))
 
         const result = await fetch('/api/parkinglocation/new', {
             method: 'POST',
-            body: data
+            body: formData,
         })
-        
 
         if (result.ok) {
             toast.success("Record created")
             setOpen(false)
             router.refresh()
         } else {
-            // show error
-            toast.error("failed to create the parking location")
+            toast.error("Failed to create the parking location")
         }
     }
+
     const handleNextStepChange = () => {
-        if (step === totalSteps ) return
-        
-        setStep(currentStep => currentStep + 1)
+        if (step < totalSteps) {
+            setStep((currentStep) => currentStep + 1)
+        }
     }
 
     const handlePrevStepChange = () => {
-        if (step === 1) return
-
-        setStep(currentStep => currentStep - 1)
+        if (step > 1) {
+            setStep((currentStep) => currentStep - 1)
+        }
     }
 
-    const handleOnInteracOutside = (e:Event) => {
-        const classes: Array<Array<string>> = []
+    const handleOnInteractOutside = (e: Event) => {
+        const classes: string[] = []
 
         e.composedPath().forEach((el) => {
             if (el instanceof Element) {
-                classes.push(Array.from(el.classList))
+                classes.push(...el.classList)
             }
         })
 
@@ -103,31 +102,36 @@ function AddLocationDialog({id=null,open,setOpen}:Props) {
             e.preventDefault()
         }
     }
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent onInteractOutside={handleOnInteracOutside}>
+            <DialogContent onInteractOutside={handleOnInteractOutside}>
                 <DialogHeader>
                     <DialogTitle>List your spot</DialogTitle>
                     <div className="space-y-8">
                         <Progress value={step * stepIncrement} />
                         {{
-                            1:<SpotAddress onNext={handleNextStepChange}/>,
-                            2:<NumberOfSpots onNext={handleNextStepChange} onPrev={handlePrevStepChange} />,
-                            3:<Pricing onNext={handleNextStepChange} onPrev={handlePrevStepChange} />,
-                            4:<Summary onNext={handleNextStepChange} onPrev={handlePrevStepChange} />
+                            1: <SpotAddress onNext={handleNextStepChange} />,
+                            2: <NumberOfSpots onNext={handleNextStepChange} onPrev={handlePrevStepChange} />,
+                            3: <Pricing onNext={handleNextStepChange} onPrev={handlePrevStepChange} />,
+                            4: <Summary onNext={handleNextStepChange} onPrev={handlePrevStepChange} />,
                         }[step]}
                     </div>
                 </DialogHeader>
                 <DialogFooter>
-                    <div 
-                    className={`${step < totalSteps ? 'hidden' : 'flex flex-col mt-4 w-full space-y-2'}`}>
-                        <Button type='button' onClick={handleFinalSubmit}>Submit</Button>
-                        <Button type='button' variant="outline" onClick={handleListAnother}>List another</Button>
+                    <div
+                        className={`${step < totalSteps ? 'hidden' : 'flex flex-col mt-4 w-full space-y-2'}`}
+                    >
+                        <Button type="button" onClick={handleFinalSubmit}>
+                            Submit
+                        </Button>
+                        <Button type="button" variant="outline" onClick={handleListAnother}>
+                            List another
+                        </Button>
                     </div>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-
     )
 }
 

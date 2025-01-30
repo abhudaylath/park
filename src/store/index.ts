@@ -16,35 +16,37 @@ export interface SpotState {
     updateState: (date: SpotType) => void,
     restart: () => void
 }
-
 export const useMySpotStore = create<SpotState>()((set) => ({
     data: {
         address: '',
         gpscoords: {
             lat: 0,
-            lng: 0
+            lng: 0,
         },
         numberofspots: 1,
         price: {
-            hourly: 0
-        }
+            hourly: 0,
+        },
     },
 
-    updateState: (data) => set((state) => ({
-        data: { ...state.data, ...data}
-    })),
+    updateState: (data) =>
+        set((state) => ({
+            data: { ...state.data, ...data },
+        })),
 
-    restart: () => set({
-        data: {
-            address: '',
-            gpscoords: {
-                lat: 0,
-                lng: 0
+    restart: () =>
+        set((state) => ({
+            ...state, // Ensures only relevant updates are applied
+            data: {
+                address: '',
+                gpscoords: {
+                    lat: 0,
+                    lng: 0,
+                },
+                numberofspots: 1,
+                price: {
+                    hourly: 0,
+                },
             },
-            numberofspots: 1,
-            price: {
-                hourly: 0
-            }
-        }
-    })
-}))
+        })),
+}));
