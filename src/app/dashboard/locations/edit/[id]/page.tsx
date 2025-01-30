@@ -3,12 +3,10 @@ import React from 'react';
 import LocationEditForm from './location-edit-form';
 import mongoose from 'mongoose';
 
-export const dynamic = 'force-dynamic';
-
 export default function LocationEditPage({
     params,
 }: {
-    params: string ;
+    params: { id: string };
 }) {
     const objectId = new mongoose.Types.ObjectId(params.id);
 
