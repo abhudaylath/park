@@ -3,7 +3,7 @@ import React from 'react';
 import LocationEditForm from './location-edit-form';
 
 // Removed 'async' from the page component
-export default function LocationEditPage({
+export async function LocationEditPage({
     params
 }: { params: { id: string } }) {
     const { id } = params;  // Directly access params without async/await
