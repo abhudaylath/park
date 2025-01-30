@@ -5,7 +5,7 @@ import LocationEditForm from './location-edit-form';
 export default async function LocationEditPage({
     params
 }: { params: { id: string } }) {
-    const { id } = await params;
+    const { id } = params; // Directly access params without awaiting it
     
     try {
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
