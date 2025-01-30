@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
-export default async function LocationEditPage({
+export default function LocationEditPage({
     params,
 }: {
     params: { id: string };
@@ -13,12 +13,15 @@ export default async function LocationEditPage({
     const objectId = new mongoose.Types.ObjectId(params.id);
 
     try {
-        const location = await ParkingLocationModel.findById<ParkingLocation>(objectId);
-
-        if (!location) {
-            return <p>Location not found</p>;
+        const fun = async () =>{
+            const location = await ParkingLocationModel.findById<ParkingLocation>(objectId);
+        
+            if (!location) {
+                return <p>Location not found</p>;
+            }
+    
         }
-
+        fun()
         return (
             <div>
                 <h1>Edit Parking Location</h1>
