@@ -2,20 +2,19 @@ import { ParkingLocation, ParkingLocationModel } from '@/schemas/parking-locatio
 import React from 'react';
 import LocationEditForm from './location-edit-form';
 
-// Export a server-side component for fetching data
+// Define the page component as a server component
 export default async function LocationEditPage({
     params,
 }: {
-    params: { id: string };
+    params: { id: string }; // Properly type the `params` object
 }) {
     const { id } = params;
 
     try {
-        // Fetch location data
+        // Fetch location data on the server
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
 
         if (!location) {
-            // Render "not found" UI
             return <p>Location not found</p>;
         }
 
