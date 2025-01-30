@@ -3,17 +3,17 @@ import React from 'react';
 import LocationEditForm from './location-edit-form';
 import mongoose from 'mongoose';
 
-// Export a server component for the page
+export const dynamic = 'force-dynamic';
+
 export default async function LocationEditPage({
     params,
 }: {
-    params: { id: string }; // Correctly typed params
+    params: { id: string };
 }) {
-    const { id } = params;
+    const id = new mongoose.Types.ObjectId(params.id);
 
     try {
-        // Fetch location data from the database
-        const location = await ParkingLocationModel.findById<ParkingLocation>(new mongoose.Types.ObjectId(id));
+        const location = await ParkingLocationModel.findById<ParkingLocation>(id);
 
         if (!location) {
             return <p>Location not found</p>;
@@ -22,11 +22,10 @@ export default async function LocationEditPage({
         return (
             <div>
                 <h1>Edit Parking Location</h1>
-                <LocationEditForm location={JSON.stringify(location)} id={id} />
+                <LocationEditForm location={JSON.stringify(location)} id={params.id} />
             </div>
         );
-    } catch (error) {
-        console.error('Error fetching location:', error);
+    } catch {
         return <p>Error loading location data</p>;
     }
 }
