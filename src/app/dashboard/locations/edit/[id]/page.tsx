@@ -6,14 +6,14 @@ import mongoose from 'mongoose';
 export const dynamic = 'force-dynamic';
 
 export default async function LocationEditPage({
-    params,
+    id,
 }: {
-    params: { id: string };
+    id: string;
 }) {
-    const id = new mongoose.Types.ObjectId(params.id);
+    const objectId = new mongoose.Types.ObjectId(id);
 
     try {
-        const location = await ParkingLocationModel.findById<ParkingLocation>(id);
+        const location = await ParkingLocationModel.findById<ParkingLocation>(objectId);
 
         if (!location) {
             return <p>Location not found</p>;
@@ -22,7 +22,7 @@ export default async function LocationEditPage({
         return (
             <div>
                 <h1>Edit Parking Location</h1>
-                <LocationEditForm location={JSON.stringify(location)} id={params.id} />
+                <LocationEditForm location={JSON.stringify(location)} id={id} />
             </div>
         );
     } catch {
