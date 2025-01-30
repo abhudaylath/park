@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
-export default function LocationEditPage({
+export async function LocationEditPage({
     id,
 }: {
     id: string;
