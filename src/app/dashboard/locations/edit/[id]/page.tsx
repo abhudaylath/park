@@ -1,18 +1,19 @@
 import { ParkingLocation, ParkingLocationModel } from '@/schemas/parking-locations';
 import React from 'react';
 import LocationEditForm from './location-edit-form';
+import mongoose from 'mongoose';
 
-// Define the page component as a server component
+// Export a server component for the page
 export default async function LocationEditPage({
     params,
 }: {
-    params: { id: string }; // Properly type the `params` object
+    params: { id: string }; // Correctly typed params
 }) {
     const { id } = params;
 
     try {
-        // Fetch location data on the server
-        const location = await ParkingLocationModel.findById<ParkingLocation>(id);
+        // Fetch location data from the database
+        const location = await ParkingLocationModel.findById<ParkingLocation>(new mongoose.Types.ObjectId(id));
 
         if (!location) {
             return <p>Location not found</p>;
