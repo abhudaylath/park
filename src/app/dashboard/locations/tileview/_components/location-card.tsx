@@ -41,7 +41,7 @@ const LocationCard: React.FC<Props> = ({
             <CardFooter>
                 <div className="flex w-full justify-between">
                     <LocationDeleteButton id={id}/>
-                    <Link href={`./dashboard/locations/edit/${id}`} >
+                    <Link href={`./edit/${id}`} >
                         <PencilIcon className='w-4 h-4' color="blue" />
                     </Link>
                 </div>

@@ -7,8 +7,11 @@ async function LocationEditPage({
 }: {
     params: { id: string };
 }) {
-    const { id } = params;
-
+    console.log("HI");
+    
+    const { id } = await params;
+    console.log(typeof(id));
+    
     try {
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
 
@@ -18,7 +21,7 @@ async function LocationEditPage({
 
         return (
             <div>
-                <LocationEditForm location={JSON.stringify(location)} id={params.id} />
+                <LocationEditForm location={JSON.stringify(location)} id={id} />
             </div>
         );
     } catch {
