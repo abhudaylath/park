@@ -36,7 +36,7 @@ function BookPage() {
     if (!date || !startTime || !endTime) {
         throw new Error("Invalid date or time");
     }
-    const parsedDate = new Date(date);
+    const parsedDate = useMemo(() => new Date(date), [date]);
     if (isNaN(parsedDate.getTime())) {
         throw new Error("Invalid date format");
     }
@@ -48,15 +48,23 @@ function BookPage() {
     if (isNaN(hr) || isNaN(min)) {
         throw new Error("Invalid time format");
     }
-    const combinedDate = new Date(parsedDate);
-    const combinedDate2 = new Date(parsedDate);
-    combinedDate.setHours(hours, minutes, 0, 0);
-    combinedDate2.setHours(hr, min, 0, 0);
+    const combinedDate = useMemo(() => {
+        const newDate = new Date(parsedDate);
+        newDate.setHours(hours, minutes, 0, 0);
+        return newDate;
+    }, [parsedDate, hours, minutes]);
+    
+    const combinedDate2 = useMemo(() => {
+        const newDate = new Date(parsedDate);
+        newDate.setHours(hr, min, 0, 0);
+        return newDate;
+    }, [parsedDate, hr, min]);
+    
 
 
     const diffInHours = useMemo(() => {
         return differenceInMinutes(combinedDate2, combinedDate) / 60;
-    }, []);
+    }, [combinedDate, combinedDate2]);
     
     useEffect(() => {
         if (!locationId) {

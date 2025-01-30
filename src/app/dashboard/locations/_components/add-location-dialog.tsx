@@ -44,7 +44,7 @@ function AddLocationDialog({id=null,open,setOpen}:Props) {
         } else {
             mySpotStore.restart()
         }
-    }, [id, open])
+    }, [id, open,mySpotStore])
 
     const handleListAnother = () => {
         setStep(1)

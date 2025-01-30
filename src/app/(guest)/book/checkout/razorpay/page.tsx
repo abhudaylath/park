@@ -3,6 +3,40 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+interface RazorpayPrefill {
+    name?: string;
+    email?: string;
+    contact?: string;
+}
+
+interface RazorpayTheme {
+    color?: string;
+}
+
+interface RazorpayOptions {
+    key: string;
+    amount: number;
+    currency: string;
+    name: string;
+    description?: string;
+    image?: string;
+    order_id?: string;
+    handler: (response: { razorpay_payment_id: string; razorpay_order_id?: string; razorpay_signature?: string }) => void;
+    prefill?: RazorpayPrefill;
+    notes?: Record<string, string>;
+    theme?: RazorpayTheme;
+}
+
+interface RazorpayInstance {
+    open: () => void;
+}
+
+declare global {
+    interface Window {
+        Razorpay: new (options: RazorpayOptions) => RazorpayInstance;
+    }
+}
+
 export default function RazorpayCheckout() {
     const searchParams = useSearchParams();
     const options = searchParams.get('options');
@@ -14,9 +48,13 @@ export default function RazorpayCheckout() {
             script.async = true;
             script.onload = () => {
                 if (options) {
-                    const parsedOptions = JSON.parse(decodeURIComponent(options));
-                    const razorpay = new (window as any).Razorpay(parsedOptions);
-                    razorpay.open();
+                    try {
+                        const parsedOptions: RazorpayOptions = JSON.parse(decodeURIComponent(options));
+                        const razorpay = new window.Razorpay(parsedOptions);
+                        razorpay.open();
+                    } catch (error) {
+                        console.error('Error parsing Razorpay options:', error);
+                    }
                 }
             };
             script.onerror = () => {
