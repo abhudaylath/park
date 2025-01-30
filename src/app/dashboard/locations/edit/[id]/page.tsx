@@ -2,27 +2,31 @@ import { ParkingLocation, ParkingLocationModel } from '@/schemas/parking-locatio
 import React from 'react';
 import LocationEditForm from './location-edit-form';
 
-// Removed 'async' from the page component
-export async function LocationEditPage({
-    params
-}: { params: { id: string } }) {
-    const { id } = params;  // Directly access params without async/await
-    
-    // Perform async operation inside useEffect or directly in try/catch for async
+// Export a server-side component for fetching data
+export default async function LocationEditPage({
+    params,
+}: {
+    params: { id: string };
+}) {
+    const { id } = params;
+
     try {
+        // Fetch location data
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
-        
+
         if (!location) {
-            // Handle the case where the location is not found
+            // Render "not found" UI
             return <p>Location not found</p>;
         }
 
         return (
-            <LocationEditForm location={JSON.stringify(location)} id={id} />
+            <div>
+                <h1>Edit Parking Location</h1>
+                <LocationEditForm location={JSON.stringify(location)} id={id} />
+            </div>
         );
     } catch (error) {
         console.error('Error fetching location:', error);
-        // Render an error message or a fallback UI
         return <p>Error loading location data</p>;
     }
 }
