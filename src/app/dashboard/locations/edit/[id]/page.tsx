@@ -3,14 +3,14 @@ import React from 'react';
 import LocationEditForm from './location-edit-form';
 
 async function LocationEditPage({
-    params,
+    params
 }: {
-    params: { id: string };
-}) {
-    console.log("HI");
+    params: Promise<{ id: string }>;
+}) {    
+    //console.log(params.id);
     
-    const { id } = await params;
-    console.log(typeof(id));
+    const  id  = (await params).id;
+    console.log(id);
     
     try {
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
