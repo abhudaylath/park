@@ -10,7 +10,7 @@ async function LocationEditPage({
     //console.log(params.id);
     
     const  id  = (await params).id;
-    console.log(id);
+    //console.log(id);
     
     try {
         const location = await ParkingLocationModel.findById<ParkingLocation>(id);
