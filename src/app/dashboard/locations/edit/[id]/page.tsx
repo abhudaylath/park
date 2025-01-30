@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export default function LocationEditPage({
     params,
 }: {
-    params: { id: string };
+    params: string ;
 }) {
     const objectId = new mongoose.Types.ObjectId(params.id);
 
