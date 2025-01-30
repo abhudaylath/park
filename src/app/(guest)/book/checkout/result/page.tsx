@@ -1,12 +1,10 @@
 import { connectToDB } from "@/lib/db";
-import { Booking, BookingModel } from "@/schemas/booking";
+import { BookingModel } from "@/schemas/booking";
 import { ParkingLocation, ParkingLocationModel } from "@/schemas/parking-locations";
-import { formatDate } from "date-fns";
+import { format } from "date-fns";
 import { BookingStatus } from "@/types";
 import React from "react";
 import { CheckCircle2 } from "lucide-react";
-//import { sendConfirmationEmail } from "@/actions/actions";
-//import { currentUser } from "@clerk/nextjs/server";
 import Razorpay from "razorpay";
 import Footer from "@/components/footer";
 import { sendConfirmationEmail } from "@/actions/send-confirmation-email";
@@ -14,26 +12,23 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID!,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+    key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
-async function BookingCheckoutResultPage({ searchParams }: { searchParams: { order_id: string } }) {
-    const { order_id } = await searchParams;
+async function BookingCheckoutResultPage({ searchParams }: { searchParams: Promise<{ order_id: string }> }) {
+    const { order_id } = await searchParams; // ✅ Properly await searchParams
 
     // Get the user
     const user = await currentUser();
-
+    if (!user) {
+        throw new Error("You must be logged in");
+    }
     if (!order_id) {
         throw new Error("Invalid order ID");
     }
 
-    if (!user) {
-        throw new Error("You must be logged in");
-    }
-
     // Retrieve Razorpay order details
     const orderDetails = await razorpay.orders.fetch(order_id);
-
     if (!orderDetails) {
         throw new Error("Order not found");
     }
@@ -47,20 +42,20 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
     let plate = "";
 
     if (orderDetails.status === "paid") {
-        const bookingid = String(orderDetails.notes?.bookingid||"");
-        
+        const bookingid = String(orderDetails.notes?.bookingid || "");
+
         await connectToDB();
 
-        const booking = await BookingModel.findById<Booking>(bookingid).populate({
+        const booking = await BookingModel.findById(bookingid).populate({
             path: "locationid",
             model: ParkingLocationModel,
         });
 
         if (booking) {
-            address = ((booking?.locationid as object) as ParkingLocation).address;
-            date = formatDate(booking?.bookingdate, "MMM dd, yyyy");
-            arrivingon = formatDate(booking?.starttime, "hh:mm a");
-            leavingon = formatDate(booking?.endtime, "hh:mm a");
+            address = (booking.locationid as ParkingLocation).address;
+            date = format(booking.bookingdate, "MMM dd, yyyy");
+            arrivingon = format(booking.starttime, "hh:mm a");
+            leavingon = format(booking.endtime, "hh:mm a");
             plate = booking.plate;
 
             if (booking.status === BookingStatus.PENDING) {
@@ -68,7 +63,6 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
                 booking.stripesessionid = order_id;
 
                 await booking.save();
-
                 await sendConfirmationEmail(bookingid);
             }
         }
@@ -103,7 +97,6 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
                                 <p className="flex text-zinc-700 w-1/3 justify-end">Plate no:</p>
                                 <p className="text-zinc-700 w-1/2 justify-center">{plate.toUpperCase()}</p>
                             </div>
-
                         </div>
                         <p className="mt-2 sm:text-base text-zinc-500 py-16 text-xl">
                             We have also sent you an email with the details.
@@ -112,7 +105,7 @@ async function BookingCheckoutResultPage({ searchParams }: { searchParams: { ord
                     <Footer />
                 </div>
             ) : (
-                paymentStatus
+                <p>{paymentStatus}</p>
             )}
         </>
     );
