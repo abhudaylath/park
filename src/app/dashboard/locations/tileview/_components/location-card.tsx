@@ -19,7 +19,7 @@ type Props = {
 const LocationCard: React.FC<Props> = ({
     id, name, address, numberOfSpots, status, price
 }) => {
-//console.log(name);
+console.log(id);
 
     return (
         <Card className="w-full h-80 overflow-auto">

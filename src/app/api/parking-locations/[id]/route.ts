@@ -40,7 +40,9 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
     const { pathname } = new URL(request.url); // Extract URL path
     const id = pathname.split("/").pop(); // Extract the last part (ID)
-
+    const body = await request.json(); 
+    console.log("Request Body:", body);
+    
     try {
         if (!id) {
             return NextResponse.json({ error: 'Missing parking location ID' }, { status: 400 });

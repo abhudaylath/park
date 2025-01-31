@@ -6,7 +6,7 @@ import { Trash2Icon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
-type Props = {
+type Props = { 
     id: string,
 }
 const LocationDeleteButton: React.FC<Props> = ({ id }) => {
@@ -16,6 +16,8 @@ const LocationDeleteButton: React.FC<Props> = ({ id }) => {
     const router= useRouter();
     const handleConfirm = async () => {
         setOpen(false)
+        console.log(id,"HI"); 
+        
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parking-locations/${id}`, {
             method: 'DELETE',
             headers: {
