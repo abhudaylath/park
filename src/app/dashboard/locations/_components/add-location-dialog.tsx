@@ -63,7 +63,7 @@ function AddLocationDialog({ id = null, open, setOpen }: Props) {
 
         formData.set('data', JSON.stringify(modifiedData))
 
-        const result = await fetch('/api/parkinglocation/new', {
+        const result = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parkinglocation/new`, {
             method: 'POST',
             body: formData,
         })

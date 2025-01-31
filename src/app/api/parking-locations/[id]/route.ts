@@ -59,11 +59,10 @@ export async function DELETE(request: NextRequest) {
     }
 }
 
-// GET - Get a parking location
 export async function GET(request: NextRequest) {
-    const { pathname } = new URL(request.url); // Extract URL path
-    const id = pathname.split("/").pop(); // Extract the last part (ID)
-
+    const { pathname } = new URL(request.url);
+    const id = pathname.split("/").pop();
+    
     try {
         if (!id) {
             return NextResponse.json({ error: 'Missing parking location ID' }, { status: 400 });

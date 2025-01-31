@@ -75,7 +75,7 @@ function BookPage() {
         setLoading(true);
         (async () => {
             try {
-                const response = await fetch(`/api/parking-locations/${locationId}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parking-locations/${locationId}`);
                 if (!response.ok) {
                     throw new Error(`Error: ${response.statusText}`);
                 }

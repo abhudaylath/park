@@ -26,7 +26,7 @@ function Booked({ date, locationid }: {
                     date: date.toISOString(), // Assuming `date` is a Date object; convert it to a string
                     status: BookingStatus.BOOKED,
                 }).toString();
-                const response = await fetch(`/api/cancel-booking?${queryParams}`,{
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cancel-booking?${queryParams}`,{
                     method:"GET"
                 })
                 if(!response.ok){

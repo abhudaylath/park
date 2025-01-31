@@ -16,7 +16,7 @@ const LocationDeleteButton: React.FC<Props> = ({ id }) => {
     const router= useRouter();
     const handleConfirm = async () => {
         setOpen(false)
-        const response = await fetch(`/api/parking-locations/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parking-locations/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

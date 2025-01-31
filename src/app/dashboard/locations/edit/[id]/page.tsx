@@ -1,32 +1,43 @@
-import { ParkingLocation, ParkingLocationModel } from '@/schemas/parking-locations';
 import React from 'react';
 import LocationEditForm from './location-edit-form';
-import mongoose from 'mongoose';
 
-export default async function LocationEditPage({
-    params,
-}: {
-    params: { id: string };
-}) {
+async function fetchLocation(id: string) {
     try {
-        // Validate and convert the string ID to MongoDB ObjectId
-        const objectId = new mongoose.Types.ObjectId(params.id);
+        console.log(id);
         
-        // Fetch location document
-        const location = await ParkingLocationModel.findById<ParkingLocation>(objectId);
-        
-        if (!location) {
-            return <p>Location not found</p>;
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parkinglocation/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Location not found');
         }
 
-        return (
-            <div>
-                <h1>Edit Parking Location</h1>
-                <LocationEditForm location={JSON.stringify(location)} id={params.id} />
-            </div>
-        );
+        return await response.json();
     } catch (error) {
-        console.error('Error loading location:', error);
-        return <p>Error loading location data</p>;
+        console.error('Error fetching location:', error);
+        return null;
     }
 }
+
+async function LocationEditPage({
+    params
+}: {
+    params: Promise<{ id: string }>
+}) {
+    const id = (await params).id;
+
+    console.log("hi");
+    
+    
+    const locationData = await fetchLocation(id);
+
+    if (!locationData) {
+        return <p>Location not found</p>;
+    }
+
+    return (
+        <div>
+            <LocationEditForm location={JSON.stringify(locationData.data)} id={id} />
+        </div>
+    );
+}
+export default LocationEditPage

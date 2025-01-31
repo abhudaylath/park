@@ -1,16 +1,15 @@
-import React from 'react'
-import LocationsTileViewPage from './locations/tileview/page'
-import AddLocationButton from './locations/_components/add-location-button'
-import { Separator } from '@/components/ui/separator'
+"use client"
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 function DashboardPage() {
-    return (
-        <div>
-            <AddLocationButton />
-            <Separator className='bg-blue-400 w-full my-4' />
-            <LocationsTileViewPage/>
-        </div>
-    )
+    const router = useRouter();
+
+    useEffect(() => {
+        router.replace('/dashboard/locations/tileview');
+    }, [router]); // Run once after mount
+
+    return <div>Redirecting...</div>;
 }
 
-export default DashboardPage
+export default DashboardPage;

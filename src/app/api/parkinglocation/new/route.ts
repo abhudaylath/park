@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         const data = formData.get('data') as string
         const parkingLocation = JSON.parse(data) as ParkingLocation
         //console.log("HI");
-        
+
         //console.log(parkingLocation)
         //console.log("HI");
         const record = await ParkingLocationModel.create<ParkingLocation>({
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
             bookedspots: parkingLocation.bookedspots
         })
         //console.log(record);
-        
+
         return NextResponse.json({
             message: 'Parking location created',
             parkinglocation: record

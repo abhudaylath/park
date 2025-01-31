@@ -30,7 +30,7 @@ function SearchComponent() {
 
       const arrivingOnISO = arrivingon.toISOString();
 
-      const url = new URL('/api/parking-locations', window.location.origin); // Replace `window.location.origin` with the actual base URL if needed
+      const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parking-locations`, window.location.origin); // Replace `window.location.origin` with the actual base URL if needed
       url.searchParams.append('lat', gpscoords.lat.toString());
       url.searchParams.append('lng', gpscoords.lng.toString());
       url.searchParams.append('arrivingon', arrivingOnISO);

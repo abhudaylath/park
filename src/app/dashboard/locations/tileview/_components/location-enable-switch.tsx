@@ -18,7 +18,7 @@ const LocationToggleSwitch: React.FC<SwitchProps> = ({ id, status, name }) => {
             const newStatus =
                 isActive ? ParkingLocationStatus.NOTAVAILABLE : ParkingLocationStatus.AVAILABLE;
 
-            const response = await fetch(`/api/parking-locations/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parking-locations/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

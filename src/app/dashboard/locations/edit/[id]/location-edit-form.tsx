@@ -48,7 +48,7 @@ function LocationEditForm({ location,id }: { location: string ,id:string}) {
         setProgress(true)
         //console.log(data);
         try{
-            const response = await fetch(`/api/edit-location/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/edit-location/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

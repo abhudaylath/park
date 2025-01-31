@@ -21,7 +21,7 @@ function CancelBookingButton({
     const handleConfirm = async () => {
         setOpen(false)
         setPending(false)
-        const response = await fetch(`/api/cancel-booking/${bookingid}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/cancel-booking/${bookingid}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

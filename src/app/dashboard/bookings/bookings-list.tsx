@@ -46,7 +46,7 @@ function BookingList() {
 
     useEffect(() => {
         (async () => {
-            const response = await fetch('/api/parkinglocation', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/parkinglocation`, {
                 method: 'GET',
             });
             if (!response.ok) {
