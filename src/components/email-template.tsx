@@ -72,7 +72,7 @@ export function EmailTemplate(props: EmailTemplateProps): string {
             </head>
             <body>
                 <div class="container">
-                    <h1>Gateless Parking</h1>
+                    <h1>ParkFinder</h1>
                     <hr />
                     <p class="text">Hi ${firstName},</p>
                     <p class="text">Thank you for booking a spot with us!</p>
@@ -92,7 +92,7 @@ export function EmailTemplate(props: EmailTemplateProps): string {
                             Please contact us if you have any questions.
                             (If you reply to this email, we won't be able to see it.)
                         </p>
-                        <p>© 2024 Gateless Parking, Inc. All Rights Reserved.</p>
+                        <p>© 2024 ParkFinder, Inc. All Rights Reserved.</p>
                     </div>
                 </div>
             </body>

@@ -44,7 +44,7 @@ export async function sendConfirmationEmail(bookingid: string): Promise<ActionRe
             });
             
             /*const mailOptions = {
-                from: '"Gateless Parking" <abhudaylath@gmail.com>',
+                from: '"ParkFinder" <abhudaylath@gmail.com>',
                 to: user.primaryEmailAddress.emailAddress,
                 subject: "Your booking has been confirmed",
                 html: emailHtml,
@@ -90,7 +90,7 @@ export async function sendViolationEmail(plate: string, address: string, timesta
             })
             
             /*const mailOptions = {
-                from: '"Gateless Parking" <abhudaylath@gmail.com>',
+                from: '"ParkFinder" <abhudaylath@gmail.com>',
                 to: user.primaryEmailAddress.emailAddress,
                 subject: "Your booking has been confirmed",
                 html: emailHtml,
