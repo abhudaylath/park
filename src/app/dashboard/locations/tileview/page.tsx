@@ -1,5 +1,5 @@
 import { connectToDB } from '@/lib/db'
-import { ParkingLocation, ParkingLocationModel } from '@/schemas/parking-locations'
+import { ParkingLocation } from '@/schemas/parking-locations'
 import React from 'react'
 import LocationCard from './_components/location-card'
 import { getRestAddress, getStreetFromAddress } from '@/lib/utils'

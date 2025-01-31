@@ -46,7 +46,7 @@ function Map({ mapParams }: { mapParams: string }) {
                     : parkingPin(getPinType(loc)).element;
             } else {
 
-                const cityCircle = new google.maps.Circle({
+                new google.maps.Circle({
                     strokeColor: '#00FF00',
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
