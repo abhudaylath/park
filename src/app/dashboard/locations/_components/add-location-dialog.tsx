@@ -71,7 +71,7 @@ function AddLocationDialog({ id = null, open, setOpen }: Props) {
         if (result.ok) {
             toast.success("Record created")
             setOpen(false)
-            router.refresh()
+            router.replace('/dashboard/locations/tileview')
         } else {
             toast.error("Failed to create the parking location")
         }
