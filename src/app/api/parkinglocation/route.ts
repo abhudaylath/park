@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        await connectToDB();
+        await connectToDB(); 
         const location = await ParkingLocationModel.find({});
         //console.log(location);
         

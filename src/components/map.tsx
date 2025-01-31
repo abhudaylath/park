@@ -45,6 +45,22 @@ function Map({ mapParams }: { mapParams: string }) {
                     ? parkingPinWithIndex(getPinType(loc), index).element
                     : parkingPin(getPinType(loc)).element;
             } else {
+
+                const cityCircle = new google.maps.Circle({
+                    strokeColor: '#00FF00',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#0FF000',
+                    fillOpacity: 0.35,
+                    map,
+                    center: {
+                        lat: params[0].gpscoords.lat,
+                        lng: params[0].gpscoords.lng
+                    },
+                    radius: loc.radius
+                })
+
+
                 marker.content = destinationPin(getPinType(loc)).element;
                 marker.setAttribute("content", buildMapInfoCardContentForDestination(
                     getStreetFromAddress(loc.address),

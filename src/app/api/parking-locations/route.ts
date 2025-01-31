@@ -3,6 +3,7 @@ import { BookingModel } from "@/schemas/booking";
 import { ParkingLocation, ParkingLocationModel } from "@/schemas/parking-locations";
 import { BookingStatus, ParkingLocationStatus } from "@/types";
 import { NextResponse } from "next/server";
+import { toast } from "sonner";
 
 export async function GET(request: Request) {
     try {
@@ -170,11 +171,12 @@ export async function GET(request: Request) {
                             status: ParkingLocationStatus.FULL,
                         };
                     }
-                } catch (err) {
-                    console.log(`Error processing location ${arrivingTime}:`, err);
+                } catch {
+                    //console.log(`Error processing location ${arrivingTime}:`, err);
+                    toast.error(`Error processing location ${arrivingTime}:`)
                     return { ...location, status: 'ERROR_PROCESSING' };
                 }
-            })
+            }) 
         );
 
         // Return the found locations
